@@ -1,0 +1,26 @@
+[
+	{"name": "Ascending aorta",
+	 "length": 2.6,
+	 "diameter": 1.41,
+	 "distensibility": 2.95,
+	 "velocity": 0.15
+	},
+	{"name": "Thoracic aorta",
+	 "length": 12.2,
+	 "diameter": 1.16,
+	 "distensibility": 2.45,
+	 "velocity": 0.15
+	},
+	{"name": "Right renal",
+	 "length": 2.9,
+	 "diameter": 0.51,
+	 "distensibility": 1.40,
+	 "velocity": 0.11
+	}
+	{"name": "Left renal",
+	 "length": 1.5,
+	 "diameter": 0.47,
+	 "distensibility": 1.33,
+	 "velocity": 0.09
+	}
+]

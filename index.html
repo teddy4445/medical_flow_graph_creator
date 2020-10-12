@@ -1,0 +1,661 @@
+<html>
+ <head>
+  <title>
+   Medical Nanorobotics Flow Graph
+  </title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Medical Nanorobotics Flow Graph Generator GUI with special abilities (part of Teddy Lazebnik's Ph.D. research)" name="description"/>
+  <meta content="Teddy Lazebnik" name="author"/>
+  <link href="../img/favicon.ico" rel="icon" type="image/x-icon"/>
+  <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js" type="text/javascript">
+  </script>
+  <!-- uncomment lines below to include extra p5 libraries -->
+  <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js">
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+  <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" rel="stylesheet"/>
+  <!--<script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script>-->
+  <script language="javascript" src="ds.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="math.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="gui.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="vassal_calculator.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="sketch.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="flow_graph.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="edge.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="node.js" type="text/javascript">
+  </script>
+  <script src="https://www.gstatic.com/charts/loader.js" type="text/javascript">
+  </script>
+  <script language="javascript" src="chart.js" type="text/javascript">
+  </script>
+  <link href="plot_style.css" rel="stylesheet" type="text/css"/>
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet"/>
+ </head>
+ <body>
+  <div class="">
+   <div class="row center spacer">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+     <h1 class="center head">
+      Medical Nanorobotics Flow Graph Generator
+     </h1>
+    </div>
+   </div>
+   <div id="main">
+    <div class="row spacer">
+     <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2" id="game-holder">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 spacer-1">
+       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <p>
+         Operation rules:
+         <ol>
+          <li>
+           Click on the screen to add a node
+          </li>
+          <li>
+           Click on a node to pick it, click again to unpick it
+          </li>
+          <li>
+           Pick two nodes to add a edge between them
+          </li>
+          <li>
+           Pick two nodes to add a edge between them
+          </li>
+          <li>
+           Hold "shift" to enter delete mode, click on either node or edge to delete it
+          </li>
+          <li>
+           Hold "E" to enter edit \ info mode, click on a node to edit it
+          </li>
+          <li>
+           Hit "O" to 'add Organ node' mode
+          </li>
+          <li>
+           Hit "B" to 'add Blood Vassal node' mode
+          </li>
+          <li>
+           Hit "A" to 'add Artery edge' mode
+          </li>
+          <li>
+           Hit "V" to 'add Vein edge' mode
+          </li>
+          <li>
+           Hit "P" to enter the "presentation" mode showing the full stracture of the graph (hit again to return to edit mode)
+          </li>
+          <li>
+           Hit "S" to save your work into Python code and JS model
+          </li>
+          <li>
+           Hit "L" to open load model screen
+          </li>
+          <li>
+           Hit "R" to release the flow graph with the additinal info for the full model
+          </li>
+          <li>
+           Hold "shift + crtl" to add a Rat's model vassal nodes edge between two node
+          </li>
+          <li>
+           Hit "crtl + z" to undo the last action (up to 10 actions)
+          </li>
+          <li>
+           Hit "crtl + p" to copy the graph with the negative flow next to the original graph (1 time per graph)
+          </li>
+         </ol>
+        </p>
+        <p>
+         Visual view
+         <ol>
+          <li>
+           Yellow dot: blood vassal node
+          </li>
+          <li>
+           Perpule dot: organ node
+          </li>
+          <li>
+           Blue line: Artery edge
+          </li>
+          <li>
+           Red line: Vien edge
+          </li>
+          <li>
+           Red line: Vien edge
+          </li>
+          <li>
+           Green line: line with multiple nodes from spesific organ
+          </li>
+         </ol>
+        </p>
+       </div>
+       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="stat-box bg-grad-default">
+         <h2>
+          Nodes #
+         </h2>
+         <p id="nodes_count">
+          0
+         </p>
+        </div>
+       </div>
+       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="stat-box bg-grad-default">
+         <h2>
+          Edges #
+         </h2>
+         <p id="edges_count">
+          0
+         </p>
+        </div>
+       </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 spacer-1">
+       <form>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+         <div class="form-group">
+          <label for="node_id">
+           Node Id
+          </label>
+          <input class="form-control" id="node_id" min="1" placeholder="Node Id" type="number"/>
+         </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+         <div class="form-group">
+          <button class="btn btn-block btn-primary" onclick="return pickNode();" style="margin-top: 24px;">
+           Mark
+          </button>
+         </div>
+        </div>
+       </form>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 spacer-1">
+       <form>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+         <div class="form-group">
+          <label for="node_type">
+           Node Type
+          </label>
+          <select class="form-control" id="node_type" onchange="return changeNodeStatus();">
+           <option selected="" value="o">
+            Organ
+           </option>
+           <option value="b">
+            Blood Vassal
+           </option>
+          </select>
+         </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+         <div class="form-group">
+          <label for="edge_type">
+           Edge Type
+          </label>
+          <select class="form-control" id="edge_type" onchange="return changeEdgeStatus();">
+           <option selected="" value="a">
+            Artery
+           </option>
+           <option value="v">
+            Vein
+           </option>
+          </select>
+         </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+         <div class="form-group">
+          <label for="edge_w">
+           Edge weight
+          </label>
+          <input class="form-control" id="edge_w" max="10000" min="0" placeholder="Edge Score" type="number" value="10000"/>
+         </div>
+        </div>
+       </form>
+      </div>
+      <!-- The game-->
+      <div id="game">
+      </div>
+      <!-- End - The game-->
+     </div>
+    </div>
+    <div class="row spacer">
+     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center">
+      <div id="histogramGraph">
+      </div>
+      <p>
+       State distribution over population per generation
+      </p>
+     </div>
+    </div>
+    <div class="row spacer">
+     <!--
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center" id="blood_vassal_node_form">
+					<h3>Model's Blood Vassal Node Physical Size </h3>
+					<form>
+						<div class="row">
+							<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+								<div class="form-group">
+									<label for="factor">factor</label>
+									<input type="number"  class="form-control" id="factor" value="3.14159" readonly>
+								</div>
+							</div>
+							<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+								<div class="form-group">
+									<label for="bv_s_length">Length (mm)</label>
+									<input type="number" min="0" max="1000" class="form-control" id="bv_s_length" placeholder="Length (mm)" value="0.01">
+								</div>
+							</div>
+							<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+								<div class="form-group">
+									<label for="bv_s_radius">Radius (mm)</label>
+									<input type="number" min="0" max="1000" class="form-control" id="bv_s_radius" placeholder="Length (mm)" value="1">
+								</div>
+							</div>
+							<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+								<div class="form-group">
+									<button type="button" style="margin-top: 25px;" class="btn btn-primary btn-block" onclick="return update_table_velocity();">Update</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				-->
+     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center">
+      <h3>
+       Table of rat's main vassals
+      </h3>
+      <p>
+      </p>
+      <table class="table">
+       <thead>
+        <tr>
+         <th scope="col">
+          #
+         </th>
+         <th scope="col">
+          Name
+         </th>
+         <th scope="col">
+          Length (mm)
+         </th>
+         <th scope="col">
+          Diameter (mm)
+         </th>
+         <th scope="col">
+          Distensibility (10^-3 1/ mmHg)
+         </th>
+         <th scope="col">
+          Model Blood Nodes
+         </th>
+        </tr>
+       </thead>
+       <tbody id="vassals_table">
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- pop ups -->
+  <div aria-hidden="true" aria-labelledby="organ_add_panel_label" class="modal fade" id="organ_add_panel" role="dialog" style="opacity: 1; top: 40%; padding-top: 20px;" tabindex="-1">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <h5 class="modal-title" id="organ_add_panel_label">
+       Organ Settings
+      </h5>
+     </div>
+     <div class="modal-body">
+      <form>
+       <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="form-group">
+         <label for="organ_name">
+          Name
+         </label>
+         <input class="form-control" id="organ_name" placeholder="Organ Name" type="text"/>
+        </div>
+       </div>
+       <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="form-group">
+         <label for="lip">
+          LIP
+         </label>
+         <input class="form-control" id="lip" placeholder="Local Interaction Protocol" type="text"/>
+        </div>
+       </div>
+       <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="form-group">
+         <label for="ts">
+          Time Span
+         </label>
+         <input class="form-control" id="ts" max="999" min="1" placeholder="Time Span" type="number"/>
+        </div>
+       </div>
+      </form>
+     </div>
+     <div class="modal-footer">
+      <button class="btn btn-success btn-lg" onclick="return setOrganNodeSettings();" type="button">
+       Add
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div aria-hidden="true" aria-labelledby="rat_blood_vassal_label" class="modal fade" id="rat_blood_vassal_panel" role="dialog" style="opacity: 1; top: 40%; padding-top: 20px;" tabindex="-1">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <h5 class="modal-title" id="rat_blood_vassal_label">
+       Rat Blood Vassal Used
+      </h5>
+     </div>
+     <div class="modal-body">
+      <form>
+       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="form-group">
+         <label for="model_bv_node_count">
+          Model Blood Vassal Node Count
+         </label>
+         <select class="form-control" id="model_bv_node_count">
+          <option value="">
+           Pick Rat Vassal
+          </option>
+         </select>
+         <input id="value_holder_rat_blood_vassals" type="hidden" value=""/>
+         <input id="value_holder_rat_blood_vassals_name" type="hidden" value=""/>
+        </div>
+       </div>
+      </form>
+     </div>
+     <div class="modal-footer">
+      <button class="btn btn-success btn-lg" onclick="return PickRatBloodVassal();" type="button">
+       Pick
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div aria-hidden="true" aria-labelledby="load_data_file_label" class="modal fade" id="load_data_file" role="dialog" style="opacity: 1; top: 40%; padding-top: 20px;" tabindex="-1">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <h5 class="modal-title" id="load_data_file_label">
+       Load Model
+      </h5>
+      <button aria-label="Close" class="close" data-dismiss="modal" onclick="return closeLoadModelPanel();" type="button">
+       <span aria-hidden="true">
+        ×
+       </span>
+      </button>
+     </div>
+     <div class="modal-body">
+      <form>
+       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="form-group">
+         <label for="fg_load_file">
+          Flow Graph File
+         </label>
+         <input class="form-control" id="fg_load_file" placeholder="Flow Graph File" type="file"/>
+        </div>
+       </div>
+       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <a class="btn btn-warning" href="343_nodes_model.txt" style="margin-top: 20px;" target="_blank" title="343 Rat model's file (1 organ)">
+         343 Rat model's file (1 organ)
+        </a>
+        <br/>
+        <a class="btn btn-warning" href="467_nodes_7_organs.txt" style="margin-top: 20px;" target="_blank" title="467 Rat model's file (7 organs)">
+         467 Rat model's file (7 organs)
+        </a>
+        <br/>
+        <a class="btn btn-warning" href="full_934_nodes_7_organs.txt" style="margin-top: 20px;" target="_blank" title="Circular 934 Rat model's file (6 organs)">
+         Circular 934 Rat model's file (6 organs)
+        </a>
+       </div>
+      </form>
+     </div>
+     <div class="modal-footer">
+      <button class="btn btn-secondary btn-lg" data-dismiss="modal" onclick="return closeLoadModelPanel();" type="button">
+       Cancel
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div aria-hidden="true" aria-labelledby="release_fg_panel_label" class="modal fade" id="release_fg_panel" role="dialog" style="opacity: 1; top: 25%; padding-top: 20px;" tabindex="-1">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <h5 class="modal-title" id="release_fg_panel_label">
+       Release Model
+      </h5>
+      <button aria-label="Close" class="close" data-dismiss="modal" onclick="return closeReleasePanel();" type="button">
+       <span aria-hidden="true">
+        ×
+       </span>
+      </button>
+     </div>
+     <div class="modal-body">
+      <form>
+       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="form-group">
+         <label for="population_of_nanorobotics_size">
+          Population Of Nanorobotics Size
+         </label>
+         <input class="form-control" id="population_of_nanorobotics_size" max="9999999" min="1" placeholder="Population Of Nanorobotics Size" type="number"/>
+        </div>
+       </div>
+       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="form-group">
+         <label for="population_of_nanorobotics_half_life">
+          Population Of Nanorobotics Half Life
+         </label>
+         <input class="form-control" id="population_of_nanorobotics_half_life" max="9999999" min="1" placeholder="Population Of Nanorobotics Half Life" type="number"/>
+        </div>
+       </div>
+       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="form-group">
+         <label for="mnr_state_code">
+          MNR state code
+         </label>
+         <input class="form-control" id="mnr_state_code" placeholder="MNR state code" type="text"/>
+        </div>
+       </div>
+       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="form-group">
+         <label for="injection_node_index">
+          Injection Node Index
+         </label>
+         <input class="form-control" id="injection_node_index" min="1" placeholder="Injection Node Index" type="number"/>
+        </div>
+       </div>
+       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="form-group">
+         <label for="global_interaction_protocol">
+          Global Interaction Protocol
+         </label>
+         <input class="form-control" id="global_interaction_protocol" placeholder="Global Interaction Protocol" type="text"/>
+        </div>
+       </div>
+       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="form-group">
+         <label for="drugs">
+          Drugs
+         </label>
+         <input class="form-control" id="drugs" placeholder="Drugs" type="text"/>
+        </div>
+       </div>
+      </form>
+     </div>
+     <div class="modal-footer">
+      <button class="btn btn-secondary btn-lg" data-dismiss="modal" onclick="return closeReleasePanel();" type="button">
+       Cancel
+      </button>
+      <button class="btn btn-success btn-lg" onclick="return releaseModel();" type="button">
+       Download
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- end - pop ups -->
+  <script>
+   var data = null;
+		function update_table_velocity()
+		{
+			// load data
+			var l = document.getElementById("bv_s_length").value / 1000;
+			var r = document.getElementById("bv_s_radius").value / 1000;
+			model_standard_size = r * r * l;
+			
+			// reset the list
+			var selectElement = document.getElementById("model_bv_node_count");		
+			while (selectElement.length > 0) {
+			  selectElement.remove(0);
+			}
+			
+			// update table
+			for (var i = 0; i < data.length; i++)
+			{
+				var velocity = Math.round(VassalCalculator.calc_vassal_from_table(data[i][2], data[i][3], data[i][4]));
+				document.getElementById("val_" + i).innerHTML = "<b>" + velocity + "</b>";
+				data[i][data[i].length - 1] = velocity;
+			}
+			
+			// update select in popup panel in build
+			add_select_options();
+		}
+		
+		function add_select_options()
+		{
+			var selectElement = document.getElementById("model_bv_node_count");	
+			for (var i = 0; i < data.length; i++)
+			{
+				var option = document.createElement("option");
+				option.text = data[i][0] + " | " + data[i][1];
+				option.value = data[i][data[i].length - 1];
+				selectElement.add(option);
+			}
+		}
+		
+		$(document).ready(function() 
+		{
+			data = [[1, "Ascending arota", 2.6, 1.41, 2.95],
+					[2, "Aortic arch A", 0.7, 1.33, 2.79],
+					[3, "Brachiocephalic trunk", 2.1, 0.8, 1.97],
+					[4, "Right common carotid", 10.2, 0.52, 1.52],
+					[5, "Right external carotid", 2.6, 0.42, 1.27],
+					[6, "Right internal carotid", 1.8, 0.41, 1.42],
+					[7, "Right subclavian A", 1.2, 0.55, 1.68],
+					[8, "Right vertebral", 13.3, 0.4, 1.13],
+					[9, "Right axillary", 7.8, 0.35, 1.11],
+					[10, "Costocervical trunk", 2.7, 0.26, 0.93],
+					[11, "Internal mammary", 5.1, 0.25, 0.93],
+					[12, "Left common carotid", 13.3, 0.63, 1.55],
+					[13, "Left internal carotid", 1.8, 0.44, 1.43],
+					[14, "Left external carotid", 2.6, 0.43, 1.27],
+					[15, "Aortic arch B", 1.2, 1.2, 2.58],
+					[16, "Left subclavian A", 1.8, 0.61, 1.58],
+					[17, "Left vertebral", 13.2, 0.34, 1.12],
+					[18, "Left subclavian B", 6.1, 0.4, 1.36],
+					[19, "Left axillary", 3, 0.25, 0.92],
+					[20, "Left cervical trunk", 2.4, 0.32, 1.1],
+					[21, "Thoracic aorta A", 12.2, 1.16, 2.45],
+					[22, "Intercostals", 1.6, 0.51, 1.42],
+					[23, "Thiracuc aorta B", 12.2, 1.11, 2.39],
+					[24, "Left suprarenal", 3, 0.33, 1.04],
+					[25, "Thoracic aorta C", 2.3, 1.06, 1.04],
+					[26, "Coeliac", 3.1, 0.46, 1.32],
+					[27, "Hepatic", 3.4, 0.24, 0.86],
+					[28, "Lieno-gastric", 5.1, 0.31, 0.98],
+					[29, "Lieno-pancreatic", 6.9, 0.29, 0.96],
+					[30, "Abdominal aorta A", 1.8, 1.0, 2.26],
+					[31, "Superior mesenteric", 4.7, 0.6, 1.56],
+					[32, "Ileocolic", 1.3, 0.31, 0.94],
+					[33, "Ileac and jejunal branches", 2.6, 0.55, 1.48],
+					[34, "Abdominal aorta B", 0.4, 0.93, 2.14],
+					[35, "Right renal", 2.9, 0.51, 1.4],
+					[36, "Abdominal aorta C", 1.9, 0.88, 2.06],
+					[37, "Right spermatic artery", 5.1, 0.26, 0.87],
+					[38, "Abdominal aorta D", 1.2, 0.85, 2.00],
+					[39, "Left renal", 1.5, 0.47, 1.33],
+					[40, "Abdominal aorta E", 1.0, 0.80, 1.94],
+					[41, "Left spermatic artery", 5.3, 0.23, 0.83],
+					[42, "Abdominal aorta F", 9.0, 0.78, 1.85],
+					[43, "Middle caudal", 28.1, 0.34, 0.96],
+					[44, "Abdominal aorta G", 0.7, 0.7, 1.77],
+					[45, "Common iliac", 3.4, 0.51, 1.41],
+					[46, "Common iliac", 3.4, 0.51, 1.41],
+					[47, "Inner iliac", 4.0, 0.23, 0.77],
+					[48, "External iliac", 1.5, 0.48, 1.36],
+					[49, "Pudic-epigastric trunk", 1.3, 0.27, 0.88],
+					[50, "Femoral", 8.6, 0.47, 1.32],
+					[51, "Posterior tibial", 4.3, 0.30, 0.98],
+					[52, "Anterior tibial", 3.0, 0.35, 0.98],
+					[53, "Inner iliac", 4.0, 0.23, 0.77],
+					[54, "External iliac", 1.5, 0.48, 1.36],
+					[55, "Pudic-epigastric trunk", 1.3, 0.27, 0.88],
+					[56, "Femoral", 8.6, 0.47, 1.32],
+					[57, "Posterior tibial", 4.3, 0.30, 0.98],
+					[58, "Anterior tibial", 3.0, 0.35, 0.98],
+					[59, "Right subclavian B", 0.7, 0.53, 1.62],
+					[60, "Maxillary", 8.3, 0.26, 1.23],
+					[61, "Ophthalmic", 3.2, 0.33, 1.13],
+					[62, "Internal carotid sinus", 4.8, 0.35, 1.36],
+					[63, "Anterior choroidal", 1.3, 0.19, 0.78],
+					[64, "ICA distal", 1.5, 0.28, 1.12],
+					[65, "Posterior cerebral C", 2.7, 0.22, 0.84],
+					[66, "Posterior cerebral B", 3.5, 0.22, 2.0],
+					[67, "Posterior cerebral A", 2.6, 0.19, 1.01],
+					[68, "Posterior cerebral A", 2.6, 0.19, 1.01],
+					[69, "Basilar artery", 4.8, 0.23, 1.33],
+					[70, "Posterior cerebral B", 3.5, 0.22, 1.83],
+					[71, "Posterior cerebral C", 2.7, 0.22, 0.90],
+					[72, "Middle cerebral", 2.2, 0.19, 0.86],
+					[73, "Anterior cerebral", 2.6, 0.24, 1.00],
+					[74, "Supraorbital", 2.1, 0.31, 2.0],
+					[75, "Naso-frontal", 2.0, 0.19, 1.59],
+					[76, "Anterior facial", 3.2, 0.18, 1.47],
+					[77, "Anterior cerebral", 2.6, 0.24, 2.07],
+					[78, "Middle cerebral", 2.2, 0.19, 1.82],
+					[79, "ICA distal", 1.5, 0.28, 1.20],
+					[80, "Anterior choroidal", 1.3, 0.19, 0.83],
+					[81, "Internal carotid sinus", 4.8, 0.35, 1.37],
+					[82, "Ophthalmic", 3.2, 0.33, 1.22],
+					[83, "fac. occ. left sup. thy. asc. ph. lyng. fac.", 3.2, 0.19, 1.05],
+					[84, "Maxillary", 8.3, 0.26, 1.24],
+					[85, "fac. occ. left sup. thy. asc. ph. lyng. fac.", 3.2, 0.19, 1.04],
+					[86, "Not checked. Left Lung", 4, 1.16, 2.4],
+					[87, "Not checked. right Lung", 4, 1.16, 2.4],
+					[88, "Not checked. To Liver", 1.1, 2, 2.1],
+					[89, "Not checked. From Liver", 3, 1.4, 2.1],
+					[90, "Not checked. Left Kidny", 4.5, 0.9, 1.8],
+					[91, "Not checked. Right Kidny", 4.5, 0.9, 1.8],
+					[92, "Not checked. To Spleen", 7.1, 2, 2.1],
+					[93, "Not checked. From Spleen", 3, 1.4, 2.1],]
+					
+			var table_data = $('#vassals_table');
+			for (var i = 0; i < data.length; i++)
+			{
+				var row_data = "<tr>";
+				row_data += "<th scope='row'>" + data[i][0] + "</th>"
+				for (var j = 1; j < data[i].length; j++) 
+				{
+					row_data += "<td>" + data[i][j] + "</td>";
+				}
+				// var velocity = Math.round(VassalCalculator.calc_vassal_from_table(data[i][2], data[i][3], data[i][4]));
+				var velocity = Math.floor(data[i][2]) + 2;
+				row_data += "<td id='val_" + i + "'><b>" + velocity + "</b></td>";
+				row_data += "</tr>";
+				table_data.append(row_data);
+				data[i].push(velocity);
+			}
+			
+			// build options list
+			add_select_options();
+		});
+  </script>
+ </body>
+</html>
